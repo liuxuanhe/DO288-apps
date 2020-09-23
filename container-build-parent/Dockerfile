@@ -1,4 +1,4 @@
-FROM richxsl/rhel7:latest
+FROM centos:centos7
 MAINTAINER Red Hat Training <training@redhat.com>
 # Generic labels
 LABEL Component="httpd" \
@@ -15,8 +15,8 @@ ENV DOCROOT=/var/www/html \
  LANG=en_US \
  LOG_PATH=/var/log/httpd
 # Need this for installing Apache from classroom yum repo
-ADD epel-7.repo /etc/yum.repos.d/training.repo
-RUN yum install --noplugins httpd && \
+ADD Centos-7.repo /etc/yum.repos.d/training.repo
+RUN yum install --noplugins httpd -y && \
  yum clean all --noplugins -y && \
  echo "Hello from the httpd-parent container!" > ${HOME}/index.html
 # Allows child images to inject their own content into DocumentRoot
