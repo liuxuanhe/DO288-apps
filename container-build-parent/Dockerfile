@@ -23,6 +23,6 @@ RUN sed -i "s/Listen 80/Listen 8080/g" /etc/httpd/conf/httpd.conf && chgrp -R 0 
 USER 1001
 EXPOSE 8080
 
-LABLE io.openshift.expose-services="8080:http"
+LABEL io.openshift.expose-services="8080:http"
 # Launch apache daemon
 CMD /usr/sbin/apachectl -DFOREGROUND
