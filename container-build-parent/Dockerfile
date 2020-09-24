@@ -8,7 +8,6 @@ LABEL Component="httpd" \
 # Labels consumed by OpenShift
 LABEL io.k8s.description="A basic Apache HTTP Server image with ONBUILD instructions" \
  io.k8s.display-name="Apache HTTP Server parent image" \
- io.openshift.expose-services="80:http" \
  io.openshift.tags="apache, httpd"
 # DocumentRoot for Apache
 ENV DOCROOT=/var/www/html \
@@ -16,9 +15,9 @@ ENV DOCROOT=/var/www/html \
  LOG_PATH=/var/log/httpd
 # Need this for installing Apache from classroom yum repo
 ADD Centos-7.repo /etc/yum.repos.d/training.repo
-RUN yum install --noplugins httpd -y && \
- yum clean all --noplugins -y && \
- echo "Hello from the httpd-parent container!" > ${HOME}/index.html
+RUN yum install --noplugins httpd -y
+RUN yum clean all --noplugins -y
+RUN echo "Hello from the httpd-parent container!" > ${HOME}/index.html
 # Allows child images to inject their own content into DocumentRoot
 ONBUILD COPY src/ ${DOCROOT}/
 EXPOSE 80
