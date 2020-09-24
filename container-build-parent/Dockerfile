@@ -15,15 +15,14 @@ ENV DOCROOT=/var/www/html \
  LOG_PATH=/var/log/httpd
 # Need this for installing Apache from classroom yum repo
 ADD Centos-7.repo /etc/yum.repos.d/training.repo
-RUN yum install --noplugins httpd -y
-RUN yum clean all --noplugins -y
-RUN echo "Hello from the httpd-parent container!" > ${HOME}/index.html
+RUN yum install --noplugins httpd -y && yum clean all --noplugins -y && echo "Hello from the httpd-parent container!" > ${HOME}/index.html
 # Allows child images to inject their own content into DocumentRoot
-ONBUILD COPY src/ ${DOCROOT}/
-EXPOSE 80
-# This stuff is needed to ensure a clean start
-RUN rm -rf /run/httpd && mkdir /run/httpd
-# Run as the root user
-USER root
+ONBUILD COPY src/ /var/www/html/
+RUN sed -i "s/Listen 80/Listen 8080/g" /etc/httpd/conf/httpd.conf && chgrp -R 0 /var/log/httpd /var/run/httpd && chmod -R g=u /var/log/httpd /var/run/httpd && rm -rf /run/httpd && mkdir /run/httpd
+
+USER 1001
+EXPOSE 8080
+
+LABLE io.openshift.expose-services="8080:http"
 # Launch apache daemon
 CMD /usr/sbin/apachectl -DFOREGROUND
